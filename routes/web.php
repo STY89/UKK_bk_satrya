@@ -3,19 +3,24 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
+// Halaman utama
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('welcome'); // welcome.blade.php
+})->name('home');
 
-Route::get('/login', fn () => view('auth.login'))->name('login');
-
-// Route POST untuk login
+// ====== LOGIN ======
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-// Route untuk logout
+// ====== REGISTER ======
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+// ====== DASHBOARD ======
+Route::get('/dashboard', function () {
+    return view('dashboard.menu');
+})->middleware('auth')->name('dashboard');
+
+// ====== LOGOUT ======
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Route dashboard, hanya bisa diakses user yang login
-Route::get('/dashboard', function() {
-    return view('dashboard'); // buat file dashboard.blade.php
-})->middleware('auth');

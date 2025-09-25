@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login BK</title>
+    <title>Register BK</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            background: linear-gradient(135deg, #10b981, #22c55e);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,6 +27,7 @@
             margin-bottom: 30px;
             color: #1f2937;
         }
+        input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
@@ -36,22 +37,21 @@
             border: 1px solid #ccc;
             outline: none;
         }
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #4f46e5;
+        input:focus {
+            border-color: #10b981;
         }
         button {
             width: 100%;
             padding: 12px;
             border: none;
             border-radius: 8px;
-            background: #4f46e5;
+            background: #10b981;
             color: white;
             font-weight: bold;
             cursor: pointer;
         }
         button:hover {
-            background: #3730a3;
+            background: #047857;
         }
         p {
             text-align: center;
@@ -59,7 +59,7 @@
             color: #4b5563;
         }
         a {
-            color: #4f46e5;
+            color: #10b981;
             text-decoration: none;
         }
         a:hover {
@@ -69,14 +69,16 @@
 </head>
 <body>
     <div class="card">
-        <h1>Login BK</h1>
-        <form action="{{ route('login') }}" method="POST">
+        <h1>Register BK</h1>
+        <form action="{{ route('register') }}" method="POST">
             @csrf
+            <input type="text" name="name" placeholder="Nama Lengkap" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <input type="password" name="password_confirmation" placeholder="Konfirmasi Password" required>
+            <button type="submit">Register</button>
         </form>
-        <p>Belum punya akun? <a href="{{ route('register') }}">Register</a></p>
+        <p>Sudah punya akun? <a href="{{ route('login') }}">Login</a></p>
     </div>
 </body>
 </html>
