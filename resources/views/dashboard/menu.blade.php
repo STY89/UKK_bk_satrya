@@ -1,85 +1,75 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard BK</title>
-    <style>
-        /* Font modern dan reset */
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(270deg, #6366f1, #a855f7, #ec4899);
-            background-size: 600% 600%;
-            animation: gradientBG 15s ease infinite;
-        }
+@extends('layouts.app')
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+@section('title', 'Dashboard')
 
-        /* Card utama */
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            padding: 3rem;
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
-        }
+@section('content')
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 to-blue-500 p-6">
+    <div class="w-full max-w-5xl">
+        <h1 class="text-3xl font-bold text-white text-center mb-8">
+            Halo, {{ auth()->user()->name }} ({{ auth()->user()->role }})
+        </h1>
 
-        .card h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 1rem;
-        }
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Card contoh -->
+            <a href="#"
+               class="dashboard-card gradient-blue">
+                <div class="text-4xl mb-4">📖</div>
+                <h2 class="text-xl font-semibold mb-2">Monitoring Siswa</h2>
+                <p class="text-white text-sm">Lihat data siswa secara keseluruhan</p>
+            </a>
 
-        .card p {
-            font-size: 1.1rem;
-            color: #4b5563;
-            margin-bottom: 2rem;
-        }
+            <a href="{{ route('prestasi.index') }}" class="dashboard-card gradient-green">
+                <div class="text-4xl mb-4">🎖️</div>
+                <h2 class="text-xl font-semibold mb-2">Prestasi</h2>
+                <p class="text-white text-sm">Lihat daftar prestasi siswa</p>
+            </a>
 
-        /* Tombol logout */
-        .btn-logout {
-            padding: 0.8rem 2rem;
-            border-radius: 1rem;
-            background-color: #ef4444;
-            color: white;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
+            <a href="{{ route('konseling.index') }}" class="dashboard-card gradient-purple">
+                <div class="text-4xl mb-4">💬</div>
+                <h2 class="text-xl font-semibold mb-2">Daftar Konseling</h2>
+                <p class="text-white text-sm">Lihat pengajuan konseling</p>
+            </a>
 
-        .btn-logout:hover {
-            background-color: #b91c1c;
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
+            <a href="{{ route('konseling.create') }}" class="dashboard-card gradient-pink">
+                <div class="text-4xl mb-4">➕</div>
+                <h2 class="text-xl font-semibold mb-2">Ajukan Konseling</h2>
+                <p class="text-white text-sm">Buat pengajuan konseling baru</p>
+            </a>
 
-    <div class="card">
-        <h1>Selamat Datang di Dashboard BK</h1>
-        <p>Halo, {{ auth()->user()->name }} ({{ auth()->user()->role }})</p>
-
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn-logout">Logout</button>
-        </form>
+            <a href="{{ route('statistik.index') }}" class="dashboard-card gradient-orange">
+                <div class="text-4xl mb-4">📊</div>
+                <h2 class="text-xl font-semibold mb-2">Statistik</h2>
+                <p class="text-white text-sm">Lihat grafik & data statistik</p>
+            </a>
+        </div>
     </div>
+</div>
 
-</body>
-</html>
+<style>
+.dashboard-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+}
+
+/* Gradient tiap card */
+.gradient-blue { background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; }
+.gradient-green { background: linear-gradient(135deg, #16a34a, #4ade80); color: white; }
+.gradient-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; }
+.gradient-pink { background: linear-gradient(135deg, #ec4899, #f472b6); color: white; }
+.gradient-orange { background: linear-gradient(135deg, #f97316, #fb923c); color: white; }
+
+h2 { color: white; }
+p { color: rgba(255, 255, 255, 0.85); }
+</style>
+@endsection

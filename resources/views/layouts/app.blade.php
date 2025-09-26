@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    @include('layouts.partials.header')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'BK App')</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    @stack('styles')
 </head>
 <body>
-    @include('layouts.partials.navbar')
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-2">
-                @include('layouts.partials.sidebar')
-            </div>
-            <div class="col-10">
-                <main class="py-4">
-                    @yield('content')
-                </main>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('dashboard') }}">BK App</a>
+            <form action="{{ route('logout') }}" method="POST" class="ms-auto">
+                @csrf
+                <button class="btn btn-danger btn-sm">Logout</button>
+            </form>
         </div>
-    </div>
+    </nav>
 
-    @include('layouts.partials.footer')
+    <main class="py-4">
+        @yield('content')
+    </main>
+
+    @stack('scripts')
 </body>
 </html>
