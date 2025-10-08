@@ -18,13 +18,13 @@
 
         <!-- Jadwal untuk offline -->
         <div>
-            <label class="block font-medium">Jadwal Konseling (Jika Offline)</label>
+            <label class="block font-medium">jadwal konseling offline</label>
             <input type="datetime-local" name="jadwal" class="w-full border rounded p-2">
         </div>
 
         <!-- Nomor WA untuk online -->
         <div>
-            <label class="block font-medium">Nomor WA Guru BK (Jika Online)</label>
+            <label class="block font-medium">Nomor WA Guru BK online</label>
             <input type="text" name="wa" class="w-full border rounded p-2" placeholder="+62xxx">
         </div>
 

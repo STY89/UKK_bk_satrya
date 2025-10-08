@@ -31,14 +31,26 @@
         input[type="password"] {
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-radius: 8px;
             border: 1px solid #ccc;
             outline: none;
+            font-size: 15px;
         }
         input[type="email"]:focus,
         input[type="password"]:focus {
             border-color: #4f46e5;
+        }
+        .alert-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: -5px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
         }
         button {
             width: 100%;
@@ -70,13 +82,33 @@
 <body>
     <div class="card">
         <h1>Login BK</h1>
-        <form action="{{ route('login') }}" method="POST">
+
+        <form action="{{ route('login') }}" method="POST" id="loginForm">
             @csrf
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+
+            {{-- ✅ Pesan error --}}
+            @if (session('error'))
+                <div class="alert-error" id="errorMsg">{{ session('error') }}</div>
+            @endif
+
+            @error('password')
+                <div class="alert-error" id="errorMsg">{{ $message }}</div>
+            @enderror
+
             <button type="submit">Login</button>
         </form>
+
         <p>Belum punya akun? <a href="{{ route('register') }}">Register</a></p>
     </div>
+
+    <script>
+        // ✅ Kosongkan field email & password kalau login gagal
+        @if (session('error'))
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        @endif
+    </script>
 </body>
 </html>
