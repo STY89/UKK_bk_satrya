@@ -9,37 +9,48 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // ====== LOGIN ======
+    // ====== LOGIN FORM ======
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
+    // ====== LOGIN PROSES ======
     public function login(Request $request)
     {
+        // ✅ Validasi input login
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
-        // Pastikan user lama keluar dulu (misal admin)
-        Auth::logout();
-
-        // Coba login
+        // ✅ Coba login
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // (Opsional) arahkan berdasarkan role
+            if (Auth::user()->role === 'ADMIN') {
+                return redirect()->route('dashboard');
+            }
+
             return redirect()->intended('/dashboard');
         }
 
-        // ❌ Kalau gagal → hapus input & tampilkan error
+        // ❌ Kalau gagal login → tampilkan pesan error dan kosongkan password
         return back()
-            ->withErrors(['password' => 'Email atau password salah!'])
-            ->withInput([]); // kosongkan input email & password
+            ->with('error', 'Email atau password salah!')
+            ->withInput($request->except('password')); // biar password kosong, email tetap keisi
     }
 
-    // ====== REGISTER ======
+    // ====== REGISTER FORM ======
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
+    // ====== REGISTER PROSES ======
     public function register(Request $request)
     {
         $request->validate([
@@ -48,15 +59,15 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        // Simpan user baru
+        // ✅ Simpan user baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'SISWA', // default role
+            'role' => $request->input('role', 'SISWA'), // default role SISWA
         ]);
 
-        // Auto login setelah register
+        // ✅ Auto login setelah register
         Auth::login($user);
 
         return redirect('/dashboard');

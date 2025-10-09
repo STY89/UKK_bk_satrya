@@ -36,9 +36,20 @@
             border-radius: 8px;
             border: 1px solid #ccc;
             outline: none;
+            font-size: 15px;
         }
         input:focus {
             border-color: #10b981;
+        }
+        .alert-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
         }
         button {
             width: 100%;
@@ -70,14 +81,25 @@
 <body>
     <div class="card">
         <h1>Register BK</h1>
-        <form action="{{ route('register') }}" method="POST">
+
+        {{-- ✅ Perbaikan: arahkan ke route register.post --}}
+        <form action="{{ route('register.post') }}" method="POST">
             @csrf
             <input type="text" name="name" placeholder="Nama Lengkap" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="password" name="password_confirmation" placeholder="Konfirmasi Password" required>
+
+            {{-- ✅ Pesan error jika validasi gagal --}}
+            @if ($errors->any())
+                <div class="alert-error">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
             <button type="submit">Register</button>
         </form>
+
         <p>Sudah punya akun? <a href="{{ route('login') }}">Login</a></p>
     </div>
 </body>

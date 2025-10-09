@@ -51,6 +51,11 @@
             text-align: center;
             font-size: 14px;
             font-weight: bold;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
         }
         button {
             width: 100%;
@@ -83,19 +88,25 @@
     <div class="card">
         <h1>Login BK</h1>
 
-        <form action="{{ route('login') }}" method="POST" id="loginForm">
+        {{-- ✅ form auto disable autofill --}}
+        <form action="{{ route('login.post') }}" method="POST" id="loginForm" autocomplete="off">
             @csrf
-            <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
-            <input type="password" id="password" name="password" placeholder="Password" required>
 
-            {{-- ✅ Pesan error --}}
+            {{-- Email --}}
+            <input type="email" id="email" name="email" placeholder="Email" 
+                   value="{{ old('email') }}" required autocomplete="off">
+
+            {{-- 🟢 Trik: tambahkan input hidden dummy untuk cegah autofill password --}}
+            <input type="text" name="fakeusernameremembered" style="display:none">
+            <input type="password" name="fakepasswordremembered" style="display:none">
+
+            {{-- Password --}}
+            <input type="password" id="password" name="password" placeholder="Password" required autocomplete="new-password">
+
+            {{-- Error --}}
             @if (session('error'))
                 <div class="alert-error" id="errorMsg">{{ session('error') }}</div>
             @endif
-
-            @error('password')
-                <div class="alert-error" id="errorMsg">{{ $message }}</div>
-            @enderror
 
             <button type="submit">Login</button>
         </form>
@@ -104,11 +115,19 @@
     </div>
 
     <script>
-        // ✅ Kosongkan field email & password kalau login gagal
-        @if (session('error'))
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-        @endif
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (session('error'))
+                // Kosongkan input password manual
+                const passwordInput = document.getElementById('password');
+                if (passwordInput) passwordInput.value = '';
+
+                // Hilangkan pesan error setelah 3 detik
+                setTimeout(() => {
+                    const err = document.getElementById('errorMsg');
+                    if (err) err.style.display = 'none';
+                }, 3000);
+            @endif
+        });
     </script>
 </body>
 </html>
