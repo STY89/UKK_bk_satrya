@@ -1,75 +1,106 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard BK Sekolah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
 
-@section('title', 'Dashboard')
+<body class="bg-gray-100 font-[Poppins] text-gray-800">
 
-@section('content')
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 to-blue-500 p-6">
-    <div class="w-full max-w-5xl">
-        <h1 class="text-3xl font-bold text-white text-center mb-8">
-            Halo, {{ auth()->user()->name }} ({{ auth()->user()->role }})
-        </h1>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Card contoh -->
-            <a href="#"
-               class="dashboard-card gradient-blue">
-                <div class="text-4xl mb-4">📖</div>
-                <h2 class="text-xl font-semibold mb-2">Monitoring Siswa</h2>
-                <p class="text-white text-sm">Lihat data siswa secara keseluruhan</p>
-            </a>
-
-            <a href="{{ route('prestasi.index') }}" class="dashboard-card gradient-green">
-                <div class="text-4xl mb-4">🎖️</div>
-                <h2 class="text-xl font-semibold mb-2">Prestasi</h2>
-                <p class="text-white text-sm">Lihat daftar prestasi siswa</p>
-            </a>
-
-            <a href="{{ route('konseling.index') }}" class="dashboard-card gradient-purple">
-                <div class="text-4xl mb-4">💬</div>
-                <h2 class="text-xl font-semibold mb-2">Daftar Konseling</h2>
-                <p class="text-white text-sm">Lihat pengajuan konseling</p>
-            </a>
-
-            <a href="{{ route('konseling.create') }}" class="dashboard-card gradient-pink">
-                <div class="text-4xl mb-4">➕</div>
-                <h2 class="text-xl font-semibold mb-2">Ajukan Konseling</h2>
-                <p class="text-white text-sm">Buat pengajuan konseling baru</p>
-            </a>
-
-            <a href="{{ route('statistik.index') }}" class="dashboard-card gradient-orange">
-                <div class="text-4xl mb-4">📊</div>
-                <h2 class="text-xl font-semibold mb-2">Statistik</h2>
-                <p class="text-white text-sm">Lihat grafik & data statistik</p>
-            </a>
-        </div>
+  <!-- Header Sekolah -->
+  <header class="bg-blue-700 text-white shadow-lg py-4 px-8 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Logo Sekolah" class="w-10 h-10">
+      <div>
+        <h1 class="text-xl font-bold">SMK Cerdas Bangsa</h1>
+        <p class="text-sm text-blue-100">Dashboard Bimbingan Konseling</p>
+      </div>
     </div>
-</div>
 
-<style>
-.dashboard-card {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
+    <form method="POST" action="{{ route('logout') }}">
+      @csrf
+      <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+        🔒 Logout
+      </button>
+    </form>
+  </header>
 
-.dashboard-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
-}
+  
 
-/* Gradient tiap card */
-.gradient-blue { background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; }
-.gradient-green { background: linear-gradient(135deg, #16a34a, #4ade80); color: white; }
-.gradient-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; }
-.gradient-pink { background: linear-gradient(135deg, #ec4899, #f472b6); color: white; }
-.gradient-orange { background: linear-gradient(135deg, #f97316, #fb923c); color: white; }
+  <!-- Layout -->
+  <div class="flex min-h-screen">
 
-h2 { color: white; }
-p { color: rgba(255, 255, 255, 0.85); }
-</style>
-@endsection
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg border-r border-gray-200 p-6">
+      <nav class="space-y-3">
+        <a href="{{ route('dashboard') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">🏠 Dashboard</a>
+        <a href="{{ route('monitoring.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👥 Monitoring Siswa</a>
+        <a href="{{ route('prestasi.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">🎖️ Prestasi</a>
+        <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Konseling</a>
+        <a href="{{ route('statistik.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">📊 Statistik</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <h2 class="text-2xl font-bold text-blue-700 mb-4">Halo, {{ auth()->user()->name }} 👋</h2>
+      <p class="text-gray-600 mb-8">Selamat datang di sistem Bimbingan Konseling sekolah.</p>
+
+      
+      <!-- GRID MENU (Card Navigasi) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <a href="{{ route('monitoring.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-blue-500 to-blue-700">
+          <div class="text-4xl mb-4">📖</div>
+          <h2 class="text-xl font-semibold mb-2">Monitoring Siswa</h2>
+          <p class="text-white text-sm">Lihat data siswa secara keseluruhan</p>
+        </a>
+
+        <a href="{{ route('prestasi.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-green-500 to-green-700">
+          <div class="text-4xl mb-4">🎖️</div>
+          <h2 class="text-xl font-semibold mb-2">Prestasi</h2>
+          <p class="text-white text-sm">Lihat daftar prestasi siswa</p>
+        </a>
+
+        <a href="{{ route('konseling.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-purple-500 to-purple-700">
+          <div class="text-4xl mb-4">💬</div>
+          <h2 class="text-xl font-semibold mb-2">Daftar Konseling</h2>
+          <p class="text-white text-sm">Lihat pengajuan konseling</p>
+        </a>
+
+        <a href="{{ route('konseling.create') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-pink-500 to-pink-700">
+          <div class="text-4xl mb-4">➕</div>
+          <h2 class="text-xl font-semibold mb-2">Ajukan Konseling</h2>
+          <p class="text-white text-sm">Buat pengajuan konseling baru</p>
+        </a>
+
+        <a href="{{ route('statistik.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-orange-500 to-orange-700">
+          <div class="text-4xl mb-4">📊</div>
+          <h2 class="text-xl font-semibold mb-2">Statistik</h2>
+          <p class="text-white text-sm">Lihat grafik & data statistik</p>
+        </a>
+      </div>
+
+      <!-- Card Statistik Singkat -->
+      <section class="grid md:grid-cols-3 gap-6 mt-10">
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow hover:shadow-md transition">
+          <h3 class="text-lg font-semibold text-blue-600 mb-2">Jumlah Siswa</h3>
+          <p class="text-3xl font-bold text-gray-800">120</p>
+        </div>
+
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow hover:shadow-md transition">
+          <h3 class="text-lg font-semibold text-blue-600 mb-2">Sesi Konseling</h3>
+          <p class="text-3xl font-bold text-gray-800">35</p>
+        </div>
+
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow hover:shadow-md transition">
+          <h3 class="text-lg font-semibold text-blue-600 mb-2">Laporan Selesai</h3>
+          <p class="text-3xl font-bold text-gray-800">17</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

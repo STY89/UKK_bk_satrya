@@ -33,6 +33,7 @@ class StatistikController extends Controller
             ->orderBy('bulan')
             ->get();
 
-        return view('statistik', compact('kategori', 'topPelanggaran', 'kelas', 'trend'));
+        return view('statistik.statistik', compact('kategori', 'topPelanggaran', 'kelas', 'trend'));
+
     }
 }
