@@ -9,16 +9,15 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // ====== LOGIN FORM ======
+    // ====== FORM LOGIN ======
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // ====== LOGIN PROSES ======
+    // ====== PROSES LOGIN ======
     public function login(Request $request)
     {
-        // ✅ Validasi input login
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -26,31 +25,41 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // ✅ Coba login
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
 
-            // (Opsional) arahkan berdasarkan role
-            if (Auth::user()->role === 'ADMIN') {
-                return redirect()->route('dashboard');
-            }
+            $role = Auth::user()->role;
 
-            return redirect()->intended('/dashboard');
+            // 🔥 Redirect otomatis sesuai role dari database
+            switch ($role) {
+                case 'GURU_BK':
+                    return redirect()->route('dashboard'); // admin BK
+
+                case 'SISWA':
+                case 'WALI_MURID':
+                case 'WALI_KELAS':
+                case 'KEPALA_SEKOLAH':
+                    return redirect()->route('dashboard'); // dashboard user biasa
+
+                default:
+                    Auth::logout();
+                    return back()->with('error', 'Role tidak dikenali!');
+            }
         }
 
-        // ❌ Kalau gagal login → tampilkan pesan error dan kosongkan password
         return back()
             ->with('error', 'Email atau password salah!')
-            ->withInput($request->except('password')); // biar password kosong, email tetap keisi
+            ->withInput($request->except('password'));
     }
 
-    // ====== REGISTER FORM ======
+    // ====== FORM REGISTER ======
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    // ====== REGISTER PROSES ======
+    // ====== PROSES REGISTER ======
     public function register(Request $request)
     {
         $request->validate([
@@ -59,18 +68,18 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        // ✅ Simpan user baru
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->input('role', 'SISWA'), // default role SISWA
+            'role' => 'SISWA'  // default role
         ]);
 
-        // ✅ Auto login setelah register
+
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect()->route('dashboard');
     }
 
     // ====== LOGOUT ======

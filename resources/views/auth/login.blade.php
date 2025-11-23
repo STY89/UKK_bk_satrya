@@ -102,7 +102,7 @@
 
             {{-- Password --}}
             <input type="password" id="password" name="password" placeholder="Password" required autocomplete="new-password">
-
+            
             {{-- Error --}}
             @if (session('error'))
                 <div class="alert-error" id="errorMsg">{{ session('error') }}</div>

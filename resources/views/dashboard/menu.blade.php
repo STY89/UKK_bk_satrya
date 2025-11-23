@@ -28,19 +28,28 @@
     </form>
   </header>
 
-  
-
   <!-- Layout -->
   <div class="flex min-h-screen">
 
     <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-lg border-r border-gray-200 p-6">
       <nav class="space-y-3">
-        <a href="{{ route('dashboard') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">🏠 Dashboard</a>
-        <a href="{{ route('monitoring.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👥 Monitoring Siswa</a>
-        <a href="{{ route('prestasi.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">🎖️ Prestasi</a>
-        <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Konseling</a>
-        <a href="{{ route('statistik.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">📊 Statistik</a>
+       <a href="{{ route('dashboard') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">🏠 Dashboard</a>
+
+@if(Auth::user()->role === 'GURU_BK')
+    <!-- Menu Admin -->
+    <a href="{{ route('monitoring.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👥 Monitoring Siswa</a>
+    <a href="{{ route('prestasi.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">🎖️ Prestasi</a>
+    <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Konseling</a>
+    <a href="{{ route('statistik.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">📊 Statistik</a>
+@else
+    <!-- Menu User (read-only) -->
+    <a href="{{ route('monitoring.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👀 Lihat Monitoring</a>
+    <a href="{{ route('prestasi.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👀 Lihat Prestasi</a>
+    <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Lihat Konseling</a>
+    <a href="{{ route('statistik.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">📊 Lihat Statistik</a>
+@endif
+
       </nav>
     </aside>
 
@@ -49,7 +58,6 @@
       <h2 class="text-2xl font-bold text-blue-700 mb-4">Halo, {{ auth()->user()->name }} 👋</h2>
       <p class="text-gray-600 mb-8">Selamat datang di sistem Bimbingan Konseling sekolah.</p>
 
-      
       <!-- GRID MENU (Card Navigasi) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <a href="{{ route('monitoring.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-blue-500 to-blue-700">
@@ -70,11 +78,13 @@
           <p class="text-white text-sm">Lihat pengajuan konseling</p>
         </a>
 
+        @if(Auth::user()->role === 'GURU_BK')
         <a href="{{ route('konseling.create') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-pink-500 to-pink-700">
           <div class="text-4xl mb-4">➕</div>
           <h2 class="text-xl font-semibold mb-2">Ajukan Konseling</h2>
           <p class="text-white text-sm">Buat pengajuan konseling baru</p>
         </a>
+        @endif
 
         <a href="{{ route('statistik.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-orange-500 to-orange-700">
           <div class="text-4xl mb-4">📊</div>
@@ -100,6 +110,41 @@
           <p class="text-3xl font-bold text-gray-800">17</p>
         </div>
       </section>
+
+      <!-- Contoh Tabel CRUD Role-based -->
+      <section class="mt-10">
+        <h3 class="text-xl font-bold mb-4">Daftar Siswa</h3>
+        <table class="w-full text-left border">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="p-2">Nama</th>
+              <th class="p-2">Kelas</th>
+              <th class="p-2">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($siswa as $s)
+            <tr class="border-t">
+              <td class="p-2">{{ $s->name }}</td>
+              <td class="p-2">{{ $s->kelas->nama_kelas ?? '-' }}</td>
+              <td class="p-2 space-x-2">
+                <a href="{{ route('siswa.show', $s->id) }}" class="text-blue-600 hover:underline">Detail</a>
+
+                @if(Auth::user()->role === 'GURU_BK')
+                  <a href="{{ route('siswa.edit', $s->id) }}" class="text-green-600 hover:underline">Edit</a>
+                  <form action="{{ route('siswa.destroy', $s->id) }}" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Yakin hapus?')">Hapus</button>
+                  </form>
+                @endif
+              </td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </section>
+
     </main>
   </div>
 </body>

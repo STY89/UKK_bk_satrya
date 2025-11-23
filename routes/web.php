@@ -7,6 +7,8 @@ use App\Http\Controllers\PrestasiController;
 use App\Http\Controllers\KonselingController;
 use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SiswaController;
 
 Route::get('/', function () {
     return view('welcome', [
@@ -27,9 +29,8 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 // =========================
 // DASHBOARD
 // =========================
-Route::get('/dashboard', function () {
-    return view('dashboard.menu');
-})->middleware('auth')->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index']) 
+    ->middleware('auth')->name('dashboard');
 
 // =========================
 // LOGOUT
@@ -40,9 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // FITUR-FITUR UTAMA (HANYA UNTUK LOGIN USER)
 // =========================
 Route::middleware('auth')->group(function () {
-
-    // Monitoring siswa
-    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+Route::resource('monitoring', MonitoringController::class);
 
     // Prestasi
     Route::resource('prestasi', PrestasiController::class);
@@ -52,5 +51,6 @@ Route::middleware('auth')->group(function () {
 
     // Statistik
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik.index');
-});
 
+    Route::resource('siswa', SiswaController::class);
+});

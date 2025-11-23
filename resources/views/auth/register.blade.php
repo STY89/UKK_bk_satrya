@@ -29,7 +29,8 @@
         }
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        select {
             width: 100%;
             padding: 12px;
             margin-bottom: 20px;
@@ -38,7 +39,8 @@
             outline: none;
             font-size: 15px;
         }
-        input:focus {
+        input:focus,
+        select:focus {
             border-color: #10b981;
         }
         .alert-error {
@@ -82,7 +84,6 @@
     <div class="card">
         <h1>Register BK</h1>
 
-        {{-- ✅ Perbaikan: arahkan ke route register.post --}}
         <form action="{{ route('register.post') }}" method="POST">
             @csrf
             <input type="text" name="name" placeholder="Nama Lengkap" required>
@@ -90,7 +91,7 @@
             <input type="password" name="password" placeholder="Password" required>
             <input type="password" name="password_confirmation" placeholder="Konfirmasi Password" required>
 
-            {{-- ✅ Pesan error jika validasi gagal --}}
+            {{-- Pesan error --}}
             @if ($errors->any())
                 <div class="alert-error">
                     {{ $errors->first() }}
