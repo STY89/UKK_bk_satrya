@@ -38,6 +38,14 @@
             @error('poin')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
         </div>
 
+
+        <div class="mb-4">
+            <label class="block mb-1">jenis</label>
+            <input type="text" name="jenis" class="w-full border px-2 py-1 rounded"
+                   value="{{ old('jenis', $monitoring->jenis) }}" required>
+            @error('jenis')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+        </div>
+
         <button type="submit" class="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500">Update</button>
         <a href="{{ route('monitoring.index') }}" class="ml-2 text-gray-700">Batal</a>
     </form>

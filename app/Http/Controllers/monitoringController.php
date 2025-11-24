@@ -88,6 +88,7 @@ public function index()
             'kategori'  => 'required|string',
             'keterangan'=> 'required|string',
             'poin'      => 'required|integer',
+            'jenis'     => 'required|string',
         ]);
 
         $monitoring = Pelanggaran::findOrFail($id);
@@ -96,6 +97,7 @@ public function index()
             'kategori'  => $request->kategori,
             'keterangan'=> $request->keterangan,
             'poin'      => $request->poin,
+            'jenis'      => $request->jenis,
         ]);
 
         return redirect()->route('monitoring.index')

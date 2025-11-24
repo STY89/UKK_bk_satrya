@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PrestasiController;
-use App\Http\Controllers\KonselingController;
+use App\Http\Controllers\ConselingController;
 use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\DashboardController;
@@ -29,7 +29,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 // =========================
 // DASHBOARD
 // =========================
-Route::get('/dashboard', [DashboardController::class, 'index']) 
+Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')->name('dashboard');
 
 // =========================
@@ -41,16 +41,18 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // FITUR-FITUR UTAMA (HANYA UNTUK LOGIN USER)
 // =========================
 Route::middleware('auth')->group(function () {
-Route::resource('monitoring', MonitoringController::class);
+    // Monitoring
+    Route::resource('monitoring', MonitoringController::class);
 
     // Prestasi
     Route::resource('prestasi', PrestasiController::class);
 
     // Konseling
-    Route::resource('konseling', KonselingController::class);
+    Route::resource('konseling', ConselingController::class);
 
     // Statistik
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik.index');
 
+    // Siswa
     Route::resource('siswa', SiswaController::class);
 });
