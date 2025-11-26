@@ -46,7 +46,7 @@
     <!-- Menu User (read-only) -->
     <a href="{{ route('monitoring.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👀 Lihat Monitoring</a>
     <a href="{{ route('prestasi.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👀 Lihat Prestasi</a>
-    <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Konseling</a>
+    <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 konseling</a>
     <a href="{{ route('statistik.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">📊 Lihat Statistik</a>
 @endif
 
@@ -58,41 +58,63 @@
       <h2 class="text-2xl font-bold text-blue-700 mb-4">Halo, {{ auth()->user()->name }} 👋</h2>
       <p class="text-gray-600 mb-8">Selamat datang di sistem Bimbingan Konseling sekolah.</p>
 
-      <!-- GRID MENU (Card Navigasi) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <a href="{{ route('monitoring.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-blue-500 to-blue-700">
-          <div class="text-4xl mb-4">📖</div>
-          <h2 class="text-xl font-semibold mb-2">Monitoring Siswa</h2>
-          <p class="text-white text-sm">Lihat data siswa secara keseluruhan</p>
-        </a>
+<!-- GRID MENU (Card Navigasi) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-        <a href="{{ route('prestasi.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-green-500 to-green-700">
-          <div class="text-4xl mb-4">🎖️</div>
-          <h2 class="text-xl font-semibold mb-2">Prestasi</h2>
-          <p class="text-white text-sm">Lihat daftar prestasi siswa</p>
-        </a>
+    <!-- Monitoring Siswa -->
+    <a href="{{ route('monitoring.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-blue-500 to-blue-700">
+        <div class="text-4xl mb-4">📖</div>
+        <h2 class="text-xl font-semibold mb-2">Monitoring Siswa</h2>
+        <p class="text-white text-sm">Lihat data siswa secara keseluruhan</p>
+    </a>
 
-        <a href="{{ route('konseling.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-purple-500 to-purple-700">
-          <div class="text-4xl mb-4">💬</div>
-          <h2 class="text-xl font-semibold mb-2">Daftar Konseling</h2>
-          <p class="text-white text-sm">Lihat pengajuan konseling</p>
-        </a>
+    <!-- Prestasi -->
+    <a href="{{ route('prestasi.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-green-500 to-green-700">
+        <div class="text-4xl mb-4">🎖️</div>
+        <h2 class="text-xl font-semibold mb-2">Prestasi</h2>
+        <p class="text-white text-sm">Lihat daftar prestasi siswa</p>
+    </a>
 
 
-        @if(Auth::user()->role === 'GURU_BK')
-        <a href="{{ route('konseling.create') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-pink-500 to-pink-700">
-          <div class="text-4xl mb-4">➕</div>
-          <h2 class="text-xl font-semibold mb-2">Ajukan Konseling</h2>
-          <p class="text-white text-sm">Buat pengajuan konseling baru</p>
+    <!-- Daftar Konseling / hanya guru lihat -->
+    @if(Auth::user()->role === 'GURU_BK')
+    <a href="{{ route('konseling.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-purple-500 to-purple-700">
+        <div class="text-4xl mb-4">💬</div>
+        <h2 class="text-xl font-semibold mb-2">Daftar Konseling</h2>
+        <p class="text-white text-sm">Lihat pengajuan konseling</p>
+    </a>
+    @endif
+    
+    @if(Auth::user()->role === 'GURU_BK')
+        <!-- Guru BK: Hanya BK AI -->
+        <a href="{{ route('bk.ai') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-purple-500 to-purple-700">
+            <div class="text-4xl mb-4">💬</div>
+            <h2 class="text-xl font-semibold mb-2">BK AI</h2>
+            <p class="text-white text-sm">Curhat dengan AI</p>
         </a>
-        @endif
+    @else
+        <!-- Siswa: Ajukan Konseling + BK AI, keduanya ungu -->
+        <a href="{{ route('konseling.create') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-purple-500 to-purple-700">
+            <div class="text-4xl mb-4">➕</div>
+            <h2 class="text-xl font-semibold mb-2">Ajukan Konseling</h2>
+            <p class="text-white text-sm">Buat pengajuan konseling baru</p>
+        </a>
 
-        <a href="{{ route('statistik.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-orange-500 to-orange-700">
-          <div class="text-4xl mb-4">📊</div>
-          <h2 class="text-xl font-semibold mb-2">Statistik</h2>
-          <p class="text-white text-sm">Lihat grafik & data statistik</p>
+        <a href="{{ route('bk.ai') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-purple-600 to-purple-800">
+            <div class="text-4xl mb-4">💬</div>
+            <h2 class="text-xl font-semibold mb-2">BK AI</h2>
+            <p class="text-white text-sm">Curhat dengan AI</p>
         </a>
-      </div>
+    @endif
+
+    <!-- Statistik -->
+    <a href="{{ route('statistik.index') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-orange-500 to-orange-700">
+        <div class="text-4xl mb-4">📊</div>
+        <h2 class="text-xl font-semibold mb-2">Statistik</h2>
+        <p class="text-white text-sm">Lihat grafik & data statistik</p>
+    </a>
+</div>
+
 
       <!-- Card Statistik Singkat -->
       <section class="grid md:grid-cols-3 gap-6 mt-10">

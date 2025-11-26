@@ -58,4 +58,9 @@ Route::middleware('auth')->group(function () {
 
     // Siswa
     Route::resource('siswa', SiswaController::class);
+
+    // BK AI
+Route::get('/bk-ai', [\App\Http\Controllers\BKAiController::class, 'index'])->name('bk.ai');
+Route::post('/bk-ai/chat', [\App\Http\Controllers\BKAiController::class, 'chat'])->name('bk.ai.chat');
+
 });
