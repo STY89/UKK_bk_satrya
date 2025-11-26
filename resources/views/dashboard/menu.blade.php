@@ -46,7 +46,7 @@
     <!-- Menu User (read-only) -->
     <a href="{{ route('monitoring.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👀 Lihat Monitoring</a>
     <a href="{{ route('prestasi.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">👀 Lihat Prestasi</a>
-    <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Lihat Konseling</a>
+    <a href="{{ route('konseling.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">💬 Konseling</a>
     <a href="{{ route('statistik.index') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition">📊 Lihat Statistik</a>
 @endif
 
@@ -77,6 +77,7 @@
           <h2 class="text-xl font-semibold mb-2">Daftar Konseling</h2>
           <p class="text-white text-sm">Lihat pengajuan konseling</p>
         </a>
+
 
         @if(Auth::user()->role === 'GURU_BK')
         <a href="{{ route('konseling.create') }}" class="p-6 rounded-xl text-white text-center shadow-md hover:shadow-xl transition bg-gradient-to-br from-pink-500 to-pink-700">

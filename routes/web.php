@@ -51,7 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('konseling', ConselingController::class);
 
     // Statistik
-    Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik.index');
+    Route::get('/statistik', [StatistikController::class, 'index'])
+    ->name('statistik.index')
+    ->middleware('auth');
+
 
     // Siswa
     Route::resource('siswa', SiswaController::class);
