@@ -2,31 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StatistikController extends Controller
 {
     public function index()
     {
-        // Ambil data pelanggaran dari DB, grup per kategori
-       $data = DB::table('pelanggarans')
-    ->select('keterangan', DB::raw('SUM(poin) as total_poin'))
-    ->groupBy('keterangan')
-    ->get();
+        // Ambil jumlah pelanggaran per keterangan
+        $data = DB::table('pelanggarans')
+            ->select('keterangan', DB::raw('COUNT(*) as total'))
+            ->groupBy('keterangan')
+            ->get();
 
+        // Hitung total semua pelanggaran
+        $totalSemua = $data->sum('total');
 
-        // Untuk chart
-       $keterangan = $data->pluck('keterangan');   // label chart
-        $totals = $data->pluck('total_poin');     // data chart
+        // Label chart
+        $keterangan = $data->pluck('keterangan');
 
-        // Hitung total semua poin untuk persentase
-        $totalSemua = $data->sum('total_poin');
-$persentase = $data->map(function($item) use ($totalSemua) {
-    return round(($item->total_poin / $totalSemua) * 100, 1);
-});
+        // Hitung persentase
+        $persentase = $data->map(function ($item) use ($totalSemua) {
+            return $totalSemua > 0
+                ? round(($item->total / $totalSemua) * 100, 1)
+                : 0;
+        });
 
-
-        return view('statistik.index', compact('data', 'keterangan', 'totals', 'persentase'));
+        return view('statistik.index', compact(
+            'keterangan',
+            'persentase'
+        ));
     }
 }

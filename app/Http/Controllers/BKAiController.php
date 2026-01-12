@@ -40,3 +40,4 @@ class BKAiController extends Controller
         return response()->json(['reply' => $reply]);
     }
 }
+

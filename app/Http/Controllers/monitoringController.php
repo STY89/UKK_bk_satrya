@@ -4,25 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pelanggaran;
+use App\Models\User;
 
 class MonitoringController extends Controller
 {
-    // F. MonitoringController.php - method index() (PERBAIKAN)
-public function index()
+    public function index()
 {
-    // Cek peran user yang sedang login
-    if(auth()->user()->role == 'SISWA'){
-        // Jika Siswa, tampilkan SEMUA data pelanggaran, 
-        // sehingga mereka bisa melihat nama-nama yang diinput Admin.
-        $monitorings = Pelanggaran::latest()->get(); 
-        
-        // Catatan: Jika Anda hanya ingin siswa melihat pelanggaran yang 'umum' 
-        // (yang user_id-nya NULL), gunakan:
-        // $monitorings = Pelanggaran::whereNull('user_id')->orWhere('user_id', auth()->id())->latest()->get();
-        
+    $user = auth()->user();
+
+    if ($user->role === 'SISWA') {
+        // Menggunakan trim untuk membersihkan spasi tak terlihat
+        $namaUser = trim($user->name);
+        $monitorings = Pelanggaran::where('user_id', $user->id)
+                        ->orWhere('nama_siswa', 'LIKE', '%' . $namaUser . '%')
+                        ->latest()
+                        ->get()
+                        ->groupBy('nama_siswa');
     } else {
-        // Untuk Admin/BK, tetap tampilkan SEMUA data
-        $monitorings = Pelanggaran::latest()->get();
+        $monitorings = Pelanggaran::with('user')
+                        ->latest()
+                        ->get()
+                        ->groupBy('nama_siswa');
     }
 
     return view('monitoring.index', compact('monitorings'));
@@ -30,85 +32,93 @@ public function index()
 
     public function create()
     {
-        if(auth()->user()->role == 'SISWA'){
+        if (auth()->user()->role === 'SISWA') {
             abort(403, 'Anda tidak memiliki akses!');
         }
-        return view('monitoring.create');
+
+        $siswa = User::where('role', 'SISWA')->get();
+        return view('monitoring.create', compact('siswa'));
     }
 
     public function store(Request $request)
     {
-        if(auth()->user()->role == 'SISWA'){
+        if (auth()->user()->role === 'SISWA') {
             abort(403, 'Anda tidak memiliki akses!');
         }
 
         $request->validate([
-            'nama_siswa' => 'required|array',
-            'nama_siswa.*'=> 'required|string',
-            'kategori'  => 'required|string',
-            'keterangan'=> 'required|string',
-            'poin'      => 'required|integer',
-            'jenis'     => 'required|string',
+            'nama_siswa'    => 'required|string',
+            'jenis_kelamin' => 'required|string',
+            'kategori'      => 'required|string',
+            'keterangan'    => 'required|string',
+            'poin'          => 'required|integer',
+            'jenis'         => 'required|string',
         ]);
 
-        foreach($request->nama_siswa as $namaSiswa){
-    Pelanggaran::create([
-        'user_id'    => null,
-        'nama_siswa' => $namaSiswa,
-        'kategori'   => $request->kategori,
-        'keterangan' => $request->keterangan,
-        'poin'       => $request->poin,
-        'status'     => 'Belum Ditindak',
-        'jenis'      => $request->jenis,
-    ]);
-}
+        $user = User::where('name', $request->nama_siswa)->first();
 
+        Pelanggaran::create([
+            'user_id'       => $user->id ?? null,
+            'nama_siswa'    => $request->nama_siswa,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'kategori'      => $request->kategori,
+            'keterangan'    => $request->keterangan,
+            'poin'          => $request->poin,
+            'status'        => 'Belum Ditindak',
+            'jenis'         => $request->jenis,
+        ]);
 
-        return redirect()->route('monitoring.index')
-            ->with('success', 'Data monitoring berhasil ditambahkan!');
+        return redirect()->route('monitoring.index')->with('success', 'Data monitoring berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
-        if(auth()->user()->role == 'SISWA'){
+        if (auth()->user()->role === 'SISWA') {
             abort(403, 'Anda tidak memiliki akses!');
         }
+
         $monitoring = Pelanggaran::findOrFail($id);
-        return view('monitoring.edit', compact('monitoring'));
+        $siswa = User::where('role', 'SISWA')->get();
+        return view('monitoring.edit', compact('monitoring', 'siswa'));
     }
 
     public function update(Request $request, $id)
     {
-        if(auth()->user()->role == 'SISWA'){
+        if (auth()->user()->role === 'SISWA') {
             abort(403, 'Anda tidak memiliki akses!');
         }
 
         $request->validate([
-            'nama_siswa'=> 'required|string',
-            'kategori'  => 'required|string',
-            'keterangan'=> 'required|string',
-            'poin'      => 'required|integer',
-            'jenis'     => 'required|string',
+            'nama_siswa'    => 'required|string',
+            'jenis_kelamin' => 'required|string',
+            'kategori'      => 'required|string',
+            'keterangan'    => 'required|string',
+            'poin'          => 'required|integer',
+            'jenis'         => 'required|string',
         ]);
 
         $monitoring = Pelanggaran::findOrFail($id);
+        $user = User::where('name', $request->nama_siswa)->first();
+
         $monitoring->update([
-            'nama_siswa'=> $request->nama_siswa,
-            'kategori'  => $request->kategori,
-            'keterangan'=> $request->keterangan,
-            'poin'      => $request->poin,
-            'jenis'      => $request->jenis,
+            'user_id'       => $user->id ?? $monitoring->user_id,
+            'nama_siswa'    => $request->nama_siswa,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'kategori'      => $request->kategori,
+            'keterangan'    => $request->keterangan,
+            'poin'          => $request->poin,
+            'jenis'         => $request->jenis,
         ]);
 
-        return redirect()->route('monitoring.index')
-            ->with('success', 'Data monitoring berhasil diupdate!');
+        return redirect()->route('monitoring.index')->with('success', 'Data monitoring berhasil diupdate!');
     }
 
     public function destroy($id)
     {
-        if(auth()->user()->role == 'SISWA'){
+        if (auth()->user()->role === 'SISWA') {
             abort(403, 'Anda tidak memiliki akses!');
         }
+
         Pelanggaran::findOrFail($id)->delete();
         return back()->with('success', 'Data monitoring berhasil dihapus!');
     }

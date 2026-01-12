@@ -1,18 +1,25 @@
-@extends('layouts.app')
+@extends('dashboard.menu') {{-- layout masuk card tengah --}}
 
 @section('content')
-<div class="container" style="max-width:600px;">
-    <h1 class="mb-4 text-center">{{ $role == 'guru' ? 'BK AI - Guru' : 'BK AI - Untuk semua orang' }}</h1>
+
+<h1 class="text-2xl font-bold mb-4 text-center">
+    {{ $role == 'guru' ? 'BK AI - Guru' : 'BK AI - Untuk semua orang' }}
+</h1>
+
+{{-- Card Tengah --}}
+<div class="bg-white rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
 
     <!-- Chat Box -->
-    <div id="chat-box" style="border:1px solid #ccc; border-radius:10px; padding:10px; height:400px; overflow-y:auto; background:#e5ddd5; display:flex; flex-direction:column;"></div>
+    <div id="chat-box" class="h-96 overflow-y-auto p-4 mb-4 flex flex-col bg-[#e5ddd5] rounded-lg"></div>
 
     <!-- Input -->
-    <div class="mt-2 d-flex">
-        <input type="text" id="message" class="form-control me-2" placeholder="Tulis curhatanmu..." onkeypress="if(event.key==='Enter'){sendMessage();}">
-        <button id="send" class="btn btn-success" onclick="sendMessage()">Kirim</button>
+    <div class="flex gap-2">
+        <input type="text" id="message" class="form-control flex-1 px-3 py-2 border rounded" placeholder="Tulis curhatanmu..." 
+               onkeypress="if(event.key==='Enter'){sendMessage();}">
+        <button id="send" class="btn btn-success px-4 py-2" onclick="sendMessage()">Kirim</button>
     </div>
-</div>
+
+</div> {{-- Akhir card tengah --}}
 
 <style>
 /* Styling balon chat */
@@ -75,4 +82,7 @@ function sendMessage() {
     msgInput.value = '';
 }
 </script>
+
+<a href="{{ route('dashboard') }}" class="block py-2 px-4 rounded-lg hover:bg-blue-100 transition mt-4">dashboard</a>
+
 @endsection

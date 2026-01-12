@@ -1,151 +1,100 @@
-@extends('layouts.app')
-
-@section('title', 'Data Monitoring')
-
-{{-- Tambah Font Awesome untuk ikon --}}
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-{{-- ============================= --}}
-{{--      CSS TAMBAHAN DI SINI     --}}
-{{-- ============================= --}}
-<style>
-    .container {
-        max-width: 1200px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    table th, table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-    }
-
-    table tr:hover {
-        background: #f0f8ff;
-    }
-
-    /* Tombol edit */
-    .btn-edit {
-        background-color: #f1c40f !important;
-        padding: 6px 12px;
-        border-radius: 6px;
-        color: white !important;
-        margin-right: 6px;
-        display: inline-block;
-    }
-    .btn-edit:hover {
-        background-color: #d4ac0d !important;
-    }
-
-    /* Tombol delete */
-    .btn-delete {
-        background-color: #e74c3c !important;
-        padding: 6px 12px;
-        border-radius: 6px;
-        color: white !important;
-        display: inline-block;
-    }
-    .btn-delete:hover {
-        background-color: #c0392b !important;
-    }
-
-    /* Tombol tambah monitoring */
-    .btn-add {
-        background-color: #3498db !important;
-        padding: 8px 14px;
-        border-radius: 6px;
-        color: white !important;
-        font-weight: bold;
-    }
-    .btn-add:hover {
-        background-color: #2980b9 !important;
-    }
-    .btn-group-row {
-    display: flex;
-    justify-content: space-between; /* Edit kiri — Delete kanan */
-    align-items: center;
-    gap: 10px;
-}
-
-</style>
+@extends('dashboard.menu')
 
 @section('content')
-<div class="container mx-auto p-4">
+<h1 class="text-2xl font-bold mb-4">Data Monitoring Pelanggaran</h1>
 
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-xl font-bold">Data Monitoring</h1>
+@if(auth()->user()->role != 'SISWA')
+    <a href="{{ route('monitoring.create') }}" class="btn-add mb-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">
+        <i class="fa fa-plus"></i> Tambah Monitoring
+    </a>
+@endif
 
-        @if(auth()->user()->role != 'SISWA')
-        <a href="{{ route('monitoring.create') }}" class="btn-add">
-            <i class="fa fa-plus"></i> Tambah Monitoring
-        </a>
-        @endif
+@if(session('success'))
+    <div class="bg-green-100 text-green-700 p-2 mb-4 rounded">
+        {{ session('success') }}
     </div>
+@endif
 
-    @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-2 mb-4 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
+<div class="bg-white rounded-xl shadow-lg p-6 max-w-6xl mx-auto mt-4">
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-300">
+            <thead>
+                <tr class="bg-[#1e40af] text-white text-center">
+                    <th class="px-4 py-3 border">No</th>
+                    <th class="px-4 py-3 border">Nama Siswa</th>
+                    <th class="px-4 py-3 border">Jenis Kelamin</th>
+                    <th class="px-4 py-3 border">Daftar Pelanggaran</th>
+                    <th class="px-4 py-3 border">Total Poin</th>
+                    @if(auth()->user()->role != 'SISWA')
+                        <th class="px-4 py-3 border">Aksi</th>
+                    @endif
+                </tr>
+            </thead>
+            <tbody>
+                @php $no = 1; @endphp
+                @forelse($monitorings as $namaSiswa => $daftarPelanggaran)
+                <tr class="hover:bg-gray-50 transition text-center">
+                    {{-- 1. Nomor --}}
+                    <td class="border px-4 py-2 text-center">{{ $no++ }}</td>
+                    
+                    {{-- 2. Nama Siswa --}}
+                    <td class="border px-4 py-2 text-left font-bold">
+                        {{ $namaSiswa }}
+                    </td>
+                    
+                    {{-- 3. Jenis Kelamin --}}
+                    <td class="border px-4 py-2 text-center">
+                        {{ $daftarPelanggaran->first()->jenis_kelamin ?? 'KOSONG' }}
+                    </td>
 
-    <table class="min-w-full border border-gray-300">
-        <thead>
-            <tr class="bg-gray-200">
-                <th class="border px-4 py-2">No</th>
-                <th class="border px-4 py-2">Nama Siswa</th>
-                <th class="border px-4 py-2">Kategori</th>
-                <th class="border px-4 py-2">Keterangan</th>
-                <th class="border px-4 py-2">Poin</th>
-                <th class="border px-4 py-2">Jenis kelamin</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($monitorings as $index => $monitor)
-            <tr class="text-center">
-                <td class="border px-4 py-2">{{ $index + 1 }}</td>
-                <td class="border px-4 py-2">{{ $monitor->nama_siswa ?? '-' }}</td>
-                <td class="border px-4 py-2">{{ $monitor->kategori }}</td>
-                <td class="border px-4 py-2">{{ $monitor->keterangan }}</td>
-                <td class="border px-4 py-2">{{ $monitor->poin }}</td>
-                <td class="border px-4 py-2">{{ $monitor->jenis }}</td>
+                    {{-- 4. Daftar Pelanggaran (Box-box kecil) --}}
+                    <td class="border px-4 py-2 text-left">
+                        <div class="flex flex-col gap-2">
+                            @foreach($daftarPelanggaran as $p)
+                            <div class="border p-2 rounded bg-gray-50 text-xs shadow-sm">
+                                <span class="text-blue-700 font-bold">[{{ $p->kategori }}]</span> {{ $p->keterangan }}
+                                <div class="text-gray-500 mt-1">Tingkat: {{ $p->jenis }} | Poin: {{ $p->poin }}</div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </td>
 
-                @if(auth()->user()->role != 'SISWA')
-       <td class="border px-4 py-2">
+                    {{-- 5. Total Poin --}}
+                    <td class="border px-4 py-2 text-center font-black text-red-600">
+                        {{ $daftarPelanggaran->sum('poin') }}
+                    </td>
 
-    <div class="btn-group-row">
-        {{-- Tombol Edit --}}
-        <a href="{{ route('monitoring.edit', $monitor->id) }}" class="btn-edit">
-            <i class="fa fa-pencil-alt"></i> Edit
-        </a>
-
-        {{-- Tombol Delete --}}
-        <form action="{{ route('monitoring.destroy', $monitor->id) }}"
-              method="POST"
-              class="inline-block"
-              onsubmit="return confirm('Yakin hapus?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn-delete">
-                <i class="fa fa-trash"></i> Delete
-            </button>
-        </form>
+                    {{-- 6. Tombol Aksi (Tetap di kolom paling kanan) --}}
+                    @if(auth()->user()->role != 'SISWA')
+                    <td class="border px-4 py-2 text-center">
+                        <div class="flex flex-col gap-2 justify-center items-center">
+                            {{-- Mengambil ID dari pelanggaran terbaru siswa tersebut --}}
+                            @php $idTerakhir = $daftarPelanggaran->first()->id; @endphp
+                            
+                            <a href="{{ route('monitoring.edit', $idTerakhir) }}" class="inline-flex items-center px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-white text-xs font-bold rounded shadow-sm transition w-20 justify-center">
+                                <i class="fa fa-pencil-alt mr-1"></i> Edit
+                            </a>
+                            
+                            <form action="{{ route('monitoring.destroy', $idTerakhir) }}" method="POST" onsubmit="return confirm('Yakin hapus data terbaru siswa ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded shadow-sm transition w-20 justify-center">
+                                    <i class="fa fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                    @endif
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="{{ auth()->user()->role == 'SISWA' ? 5 : 6 }}" class="text-center py-4 text-gray-500 italic">
+                        Belum ada data monitoring
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-
-</td>
-                @endif
-            </tr>
-            @empty
-            <tr>
-                <td colspan="{{ auth()->user()->role == 'SISWA' ? 5 : 7 }}" class="text-center">
-                    Belum ada data monitoring
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
 </div>
 @endsection

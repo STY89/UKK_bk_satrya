@@ -1,62 +1,62 @@
-@extends('layouts.app')
+@extends('dashboard.menu')
 
 @section('title', 'Tambah Monitoring')
 
 @section('content')
 <div class="container mx-auto p-4">
-    <h1 class="text-xl font-bold mb-4">Tambah Monitoring</h1>
+    <h1 class="text-2xl font-bold mb-4">Tambah Monitoring</h1>
 
-    <form action="{{ route('monitoring.store') }}" method="POST">
-        @csrf
+    <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
+        <form action="{{ route('monitoring.store') }}" method="POST">
+            @csrf
 
-        <!-- Wrapper input nama siswa -->
-        <div id="siswa-wrapper">
-            <div class="mb-4 siswa-item">
-                <label class="block mb-1">Nama Siswa</label>
-                <input type="text" name="nama_siswa[]" class="w-full border px-2 py-1 rounded" placeholder="Masukkan nama siswa" required>
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Nama Siswa</label>
+                <select name="nama_siswa" class="w-full border px-3 py-2 rounded-lg" required>
+                    <option value="" disabled selected>Pilih Siswa</option>
+                    @foreach($siswa as $s)
+                        <option value="{{ $s->name }}">{{ $s->name }}</option>
+                    @endforeach
+                </select>
             </div>
-        </div>
 
-        <!-- Tombol tambah siswa -->
-        <button type="button" id="tambah-siswa" class="bg-green-500 text-white px-3 py-1 rounded mb-4">Tambah Siswa</button>
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Jenis Kelamin</label>
+                <select name="jenis_kelamin" class="w-full border px-3 py-2 rounded-lg" required>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
 
-        <!-- Input lain -->
-        <div class="mb-4">
-            <label class="block mb-1">Kategori</label>
-            <input type="text" name="kategori" class="w-full border px-2 py-1 rounded" value="{{ old('kategori') }}" required>
-        </div>
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Kategori</label>
+                <input type="text" name="kategori" class="w-full border px-3 py-2 rounded-lg" required>
+            </div>
 
-        <div class="mb-4">
-            <label class="block mb-1">Keterangan</label>
-            <input type="text" name="keterangan" class="w-full border px-2 py-1 rounded" value="{{ old('keterangan') }}" required>
-        </div>
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Keterangan</label>
+                <input type="text" name="keterangan" class="w-full border px-3 py-2 rounded-lg" required>
+            </div>
 
-        <div class="mb-4">
-            <label class="block mb-1">Poin</label>
-            <input type="number" name="poin" class="w-full border px-2 py-1 rounded" value="{{ old('poin', 0) }}" required>
-        </div>
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Poin</label>
+                <input type="number" name="poin" class="w-full border px-3 py-2 rounded-lg" value="0" required>
+            </div>
 
-        <div class="mb-4">
-            <label class="block mb-1">Jenis</label>
-            <input type="text" name="jenis" class="w-full border px-2 py-1 rounded" placeholder="Jenis" required>
-        </div>
+            <div class="mb-6">
+                <label class="block font-semibold mb-1">Tingkat Pelanggaran</label>
+                <select name="jenis" class="w-full border px-3 py-2 rounded-lg" required>
+                    <option value="Ringan">Ringan</option>
+                    <option value="Sedang">Sedang</option>
+                    <option value="Berat">Berat</option>
+                </select>
+            </div>
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Simpan</button>
-    </form>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold">
+                Simpan Data
+            </button>
+            <a href="{{ route('monitoring.index') }}" class="text-gray-500 hover:underline ml-4">Batal</a>
+        </form>
+    </div>
 </div>
-
-<script>
-const tambahBtn = document.getElementById('tambah-siswa');
-const wrapper = document.getElementById('siswa-wrapper');
-
-tambahBtn.addEventListener('click', () => {
-    const div = document.createElement('div');
-    div.classList.add('mb-4', 'siswa-item');
-    div.innerHTML = `
-        <label class="block mb-1">Nama Siswa</label>
-        <input type="text" name="nama_siswa[]" class="w-full border px-2 py-1 rounded" placeholder="Masukkan nama siswa" required>
-    `;
-    wrapper.appendChild(div);
-});
-</script>
 @endsection

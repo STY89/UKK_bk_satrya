@@ -10,20 +10,26 @@ class Pelanggaran extends Model
 {
     use HasFactory;
 
-    protected $table = 'pelanggarans'; // wajib sesuai nama tabel di DB
+    protected $table = 'pelanggarans';
 
     protected $fillable = [
-        'user_id',   // kolom foreign key
+        'user_id',
         'nama_siswa',
         'kategori',
         'keterangan',
         'poin',
-        'status',
-        'jenis',
+        'jenis',         // <--- Ganti 'tingkat' menjadi 'jenis' agar sesuai Controller
+        'jenis_kelamin',
+        'status',        // <--- Tambahkan 'status' karena di Controller kamu memakainya
     ];
 
-    public function siswa()
+    /**
+     * Relasi ke User (Admin/Guru yang menginput)
+     */
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id'); // pastikan sesuai kolom FK
+        // Saya sarankan ganti nama fungsi dari 'siswa' ke 'user' 
+        // karena ini merujuk ke siapa yang menginput/memiliki data tersebut
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

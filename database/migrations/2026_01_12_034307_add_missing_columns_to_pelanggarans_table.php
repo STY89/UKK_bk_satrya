@@ -9,13 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
 {
     Schema::table('pelanggarans', function (Blueprint $table) {
-        $table->string('nama_siswa')->nullable();
+        // Kita tambah kolom yang belum ada saja
+        if (!Schema::hasColumn('pelanggarans', 'jenis_kelamin')) {
+            $table->string('jenis_kelamin')->nullable()->after('nama_siswa');
+        }
+        if (!Schema::hasColumn('pelanggarans', 'poin')) {
+            $table->integer('poin')->default(0)->after('keterangan');
+        }
     });
 }
-
 
     /**
      * Reverse the migrations.

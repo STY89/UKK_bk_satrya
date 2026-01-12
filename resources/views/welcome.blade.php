@@ -1,132 +1,234 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BK App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(270deg, #6366f1, #a855f7, #ec4899);
-            background-size: 600% 600%;
-            animation: gradientBG 15s ease infinite;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BK App - SMK Antartika 1</title>
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            padding: 3rem;
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-        }
+<style>
+/* ================= BODY & BACKGROUND ================= */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url("{{ asset('image/background.jpeg') }}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 
-        .icon {
-            width: 120px;
-            margin: 0 auto 1.5rem;
-            animation: bounce 2.5s infinite;
-        }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+/* ================= LOGO ================= */
+.logo-bg-topleft {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    width: 70px;
+    z-index: 10;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
 
-        h1 {
-            font-size: 2.5rem;
-            color: #1f2937;
-            margin-bottom: 0.8rem;
-        }
+/* ================= CARD ================= */
+.card {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 550px;
+    text-align: center;
+}
 
-        p {
-            color: #4b5563;
-            margin-bottom: 2rem;
-        }
+/* ================= CARD WIDE ================= */
+.card-wide {
+    max-width: 1100px;
+    width: 95%;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 25px;
+    text-align: left;
+}
 
-        .btn {
-            padding: 0.8rem 2rem;
-            border-radius: 1rem;
-            font-weight: 600;
-            color: white;
-            text-decoration: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: all 0.3s ease-in-out;
-            display: inline-block;
-            margin: 0.5rem;
-            border: none;
-            cursor: pointer;
-        }
+/* ================= TEXT BOX ================= */
+.text-box {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 18px;
+    padding: 20px 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
 
-        .btn-login { background-color: #3b82f6; }
-        .btn-login:hover { background-color: #2563eb; transform: scale(1.05); }
+.text-box h1 {
+    margin-bottom: 12px;
+    color: #00028b;
+    font-weight: 800;
+    font-size: 1.8rem;
+}
 
-        .btn-register { background-color: #10b981; }
-        .btn-register:hover { background-color: #059669; transform: scale(1.05); }
+.text-box p,
+.text-box ul {
+    color: #111827;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
 
-        .btn-dashboard { background-color: #f59e0b; }
-        .btn-dashboard:hover { background-color: #d97706; transform: scale(1.05); }
+/* ================= BUTTON ================= */
+.btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+}
 
-        .btn-logout { background-color: #ef4444; }
-        .btn-logout:hover { background-color: #dc2626; transform: scale(1.05); }
+.btn {
+    padding: 1rem 2.3rem;
+    border-radius: 1.2rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
 
-        .footer {
-            margin-top: 2rem;
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
+.btn:hover {
+    transform: scale(1.07);
+}
 
-        @media(max-width: 480px){
-            h1 { font-size: 2rem; }
-            .card { padding: 2rem; }
-            .icon { width: 100px; }
-        }
-    </style>
+.btn-login {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.btn-register {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.btn-dashboard {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.btn-logout {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+/* ================= FOOTER ================= */
+.footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #00028b;
+    font-weight: 700;
+}
+
+/* ================= ANIMASI ================= */
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-welcome {
+    opacity: 0;
+    animation: slideUpFade 0.9s ease-out forwards;
+}
+
+.animate-bk {
+    opacity: 0;
+    animation: slideUpFade 0.9s ease-out forwards;
+    animation-delay: 0.35s;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+    .card-wide {
+        grid-template-columns: 1fr;
+        max-width: 550px;
+    }
+}
+</style>
 </head>
 <body>
 
-    <div class="card">
-        <img src="https://cdn-icons-png.flaticon.com/512/2900/2900766.png" alt="BK Icon" class="icon">
+<img src="{{ asset('image/ini new logo antrek 1.png') }}" class="logo-bg-topleft" alt="Logo Sekolah">
+
+<!-- CARD WELCOME -->
+<div class="card animate-welcome">
+    <div class="text-box" style="text-align:center;">
         <h1>Selamat Datang di BK App</h1>
-        <p>Pantau pelanggaran dan perkembangan siswa dengan mudah dan cepat</p>
-
-        {{-- Kalau BELUM login --}}
-        @guest
-            <div>
-                <a href="{{ route('login') }}" class="btn btn-login">Login</a>
-                <a href="{{ route('register') }}" class="btn btn-register">Register</a>
-            </div>
-        @endguest
-
-        {{-- Kalau SUDAH login --}}
-        @auth
-            <div>
-                <p>Hai, {{ Auth::user()->name }} 👋</p>
-                <a href="{{ route('dashboard') }}" class="btn btn-dashboard">Kembali ke Dashboard</a>
-
-                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-logout">Logout</button>
-                </form>
-            </div>
-        @endauth
-
-        <div class="footer">© 2025 BK App. Semua hak cipta dilindungi.</div>
+        <p>
+            Pantau perilaku siswa dan lakukan bimbingan konseling secara profesional
+            di SMK Antartika 1 Sidoarjo.
+        </p>
     </div>
+
+    <!-- JIKA BELUM LOGIN -->
+    @guest
+    <div class="btn-container">
+        <a href="{{ route('login') }}" class="btn btn-login">Login</a>
+        <a href="{{ route('register') }}" class="btn btn-register">Register</a>
+    </div>
+    @endguest
+
+    <!-- JIKA SUDAH LOGIN -->
+    @auth
+    <div class="btn-container">
+        <a href="{{ route('dashboard') }}" class="btn btn-dashboard">
+            Masuk Dashboard
+        </a>
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-logout">
+                Logout
+            </button>
+        </form>
+    </div>
+    @endauth
+
+    <div class="footer">
+        Website ini dikelola oleh Guru BK / Admin
+    </div>
+</div>
+
+<!-- CARD BK -->
+<div class="card card-wide animate-bk">
+    <div class="text-box">
+        <h1>Apa itu BK?</h1>
+        <p>
+            Bimbingan Konseling (BK) adalah layanan profesional yang membantu siswa
+            dalam menghadapi masalah pribadi, sosial, belajar, dan karier agar
+            berkembang secara optimal.
+        </p>
+    </div>
+
+    <div class="text-box">
+        <h1>Pentingnya BK</h1>
+        <ul style="padding-left: 1.2rem;">
+            <li>Mengenali potensi dan bakat siswa</li>
+            <li>Mendukung masalah belajar & sosial</li>
+            <li>Mencegah konflik dan perilaku negatif</li>
+            <li>Meningkatkan kesehatan mental siswa</li>
+            <li>Membantu perencanaan karier</li>
+        </ul>
+    </div>
+</div>
 
 </body>
 </html>
